@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:windowSoftInputMode="stateHidden|adjustPan"
+    android:weightSum="1">
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:windowSoftInputMode="stateHidden|adjustPan"
+        android:weightSum="1">
+        <Button
+            android:text="今天"
+            android:id="@+id/first"
+            android:layout_width="153dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.97" />
+
+        <Button
+            android:text="明天"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/second" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/wendu"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tishi"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/fengxiang"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/fengli"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/high"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/type"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/low"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/date"
+        android:textSize="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
+
+
