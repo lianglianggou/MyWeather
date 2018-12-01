@@ -48,11 +48,35 @@ public class Weather extends AppCompatActivity {
             {
                 String content=(String) msg.obj;
                 try {
-                    tianqi=getJieXi(content);
+                    tianqi=today(content);
                     wendu.setText("当前温度： \t"+tianqi[0]);
                     tishi.setText("温馨提示： \t"+tianqi[1]);
                     fengxiang.setText("风向： \t"+tianqi[2]);
-                    fengli.setText("风力： \t"+tianqi[3]);
+                    fengli.setText("风力： \t"+tianqi[3].substring(10,12));
+                    high.setText("最"+tianqi[4]);
+                    type.setText("天气类型： \t"+tianqi[5]);
+                    low.setText("最"+tianqi[6]);
+                    date.setText("日期： \t"+tianqi[7]);
+
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    };
+    private Handler handler1=new Handler(){
+        public void handleMessage(android.os.Message msg) {
+            if(msg.what==10)
+            {
+                String content=(String) msg.obj;
+                try {
+                    tianqi=today1(content);
+                    wendu.setText("当前温度： \t"+tianqi[0]);
+                    tishi.setText("温馨提示： \t"+tianqi[1]);
+                    fengxiang.setText("风向： \t"+tianqi[2]);
+                    fengli.setText("风力： \t"+tianqi[3].substring(10,12));
                     high.setText("最"+tianqi[4]);
                     type.setText("天气类型： \t"+tianqi[5]);
                     low.setText("最"+tianqi[6]);
@@ -73,7 +97,7 @@ public class Weather extends AppCompatActivity {
     }
 
 
-    protected String[] getJieXi(String content) throws Exception {
+    protected String[] today(String content) throws Exception {
         // TODO Auto-generated method stub
         JSONObject obj=new JSONObject(content);
         JSONObject data = obj.getJSONObject("data");
@@ -81,6 +105,23 @@ public class Weather extends AppCompatActivity {
         String tishi=data.getString("ganmao");
         JSONArray forecast = data.getJSONArray("forecast");
         JSONObject obj2=(JSONObject) forecast.get(0);
+        String fengxiang=obj2.getString("fengxiang");
+        String fengli=obj2.getString("fengli");
+        String high=obj2.getString("high");
+        String type=obj2.getString("type");
+        String low=obj2.getString("low");
+        String date=obj2.getString("date");
+        String tianqi[]={wendu,tishi,fengxiang,fengli,high,type,low,date};
+        return tianqi;
+    }
+    protected String[] today1(String content) throws Exception {
+        // TODO Auto-generated method stub
+        JSONObject obj=new JSONObject(content);
+        JSONObject data = obj.getJSONObject("data");
+        String wendu = data.getString("wendu");
+        String tishi=data.getString("ganmao");
+        JSONArray forecast = data.getJSONArray("forecast");
+        JSONObject obj2=(JSONObject) forecast.get(1);
         String fengxiang=obj2.getString("fengxiang");
         String fengli=obj2.getString("fengli");
         String high=obj2.getString("high");
@@ -112,6 +153,20 @@ public class Weather extends AppCompatActivity {
 
             }
         });
+        bn=(Button)findViewById(R.id.second);
+        bn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try {
+                    myclick2(view);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
     }
     private void initViews() {
         // TODO Auto-generated method stub
@@ -126,14 +181,15 @@ public class Weather extends AppCompatActivity {
         date =(TextView) findViewById(R.id.date);
 
     }
+
     public void myclick(View v) throws Exception
     {;
-
+        Request request;
         OkHttpClient client= new OkHttpClient();
         Request.Builder builder=new Request.Builder();
         builder.get();
-        builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode("北京", "UTF-8"));
-        Request request = builder.build();
+        builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode("天津", "UTF-8"));
+        request = builder.build();
         Call call=client.newCall(request);
 
         call.enqueue(new Callback() {
@@ -154,6 +210,33 @@ public class Weather extends AppCompatActivity {
             }
         });
     }
+    public void myclick2(View v) throws Exception
+    {;
+        Request request;
+        OkHttpClient client= new OkHttpClient();
+        Request.Builder builder=new Request.Builder();
+        builder.get();
+        builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode("天津", "UTF-8"));
+        request = builder.build();
+        Call call=client.newCall(request);
 
+        call.enqueue(new Callback() {
+
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String content = response.body().string();
+                Message msg=Message.obtain();
+                msg.obj=content;
+                msg.what=10;
+                handler1.sendMessage(msg);
+            }
+        });
+    }
 
 }
