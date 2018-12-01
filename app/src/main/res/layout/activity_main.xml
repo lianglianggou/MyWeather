@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:windowSoftInputMode="stateHidden|adjustPan"
     android:weightSum="1">
+
     <TextView
         android:id="@+id/chengshi"
         android:textSize="50dp"
@@ -50,6 +51,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/back" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/wendu"
         android:textSize="35dp"
@@ -85,11 +87,13 @@
         android:textSize="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/date"
         android:textSize="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    
 
 
 </LinearLayout>
