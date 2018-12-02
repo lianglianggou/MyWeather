@@ -122,6 +122,44 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+    private Handler handler2=new Handler(){
+        public void handleMessage(android.os.Message msg) {
+            if(msg.what==10)
+            {
+                String content=(String) msg.obj;
+                try {
+
+                    JSONObject obj=new JSONObject(content);
+                    JSONObject data = obj.getJSONObject("data");
+                    JSONArray forecast = data.getJSONArray("forecast");
+                    mylist.clear();
+                    for(int i=0;i<5;i++){
+                        JSONObject obj2=(JSONObject) forecast.get(i);
+                        String high=obj2.getString("high");
+                        mylist.add("最"+high);
+                        String type=obj2.getString("type");
+                        mylist.add("天气类型： \t"+type);
+                        String low=obj2.getString("low");
+                        mylist.add("最"+low);
+                        String date=obj2.getString("date");
+                        mylist.add("日期： \t"+date);
+
+                    }
+
+
+
+
+                    ArrayAdapter<String> adapter1=new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item,mylist);
+                    ListView listView1=(ListView)findViewById(R.id.mylistview);
+                    listView1.setAdapter(adapter1);
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    };
 
 
 
@@ -192,6 +230,18 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     myclick2(view);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        bn=(Button)findViewById(R.id.fature);
+        bn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try {
+                    myclick4(view);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -320,6 +370,34 @@ public class MainActivity extends AppCompatActivity {
                 msg.obj=content;
                 msg.what=10;
                 handler1.sendMessage(msg);
+            }
+        });
+    }
+    public void myclick4(View v) throws Exception
+    {;
+        Request request;
+        OkHttpClient client= new OkHttpClient();
+        Request.Builder builder=new Request.Builder();
+        builder.get();
+        builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode(getCity(), "UTF-8"));
+        request = builder.build();
+        Call call=client.newCall(request);
+
+        call.enqueue(new Callback() {
+
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String content = response.body().string();
+                Message msg=Message.obtain();
+                msg.obj=content;
+                msg.what=10;
+                handler2.sendMessage(msg);
             }
         });
     }
