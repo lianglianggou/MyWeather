@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     TextView city1;
 
     ArrayList<String > mylist=new ArrayList<String>();
+    ArrayList<String > mylist1=new ArrayList<String>();
     //ArrayList<String > listviewadapter=new ArrayList<String>();
     ListView mylistview,ListView_Id;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 String content=(String) msg.obj;
                 try {
                     tianqi=today(content);
+                    mylist.clear();
                     mylist.add(0,"当前温度： \t"+tianqi[0]);
                    mylist.add(1,"风向： \t"+tianqi[2]);
                     mylist.add(2,"风力： \t"+tianqi[3].substring(10,12));
@@ -100,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 String content=(String) msg.obj;
                 try {
-                    tianqi=today(content);
+                    tianqi=today1(content);
+                    mylist.clear();
                     mylist.add(0,"当前温度： \t"+tianqi[0]);
                     mylist.add(1,"风向： \t"+tianqi[2]);
                     mylist.add(2,"风力： \t"+tianqi[3].substring(10,12));
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     ListView listView1=(ListView)findViewById(R.id.mylistview);
                     listView1.setAdapter(adapter1);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }
