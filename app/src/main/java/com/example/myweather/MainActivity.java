@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 
@@ -42,6 +44,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.R.id.list;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView city1;
 
+    ArrayList<String > mylist=new ArrayList<String>();
+    //ArrayList<String > listviewadapter=new ArrayList<String>();
+    ListView mylistview,ListView_Id;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private String key="0";
     private Handler handler=new Handler(){
         public void handleMessage(android.os.Message msg) {
             if(msg.what==10)
@@ -59,17 +67,27 @@ public class MainActivity extends AppCompatActivity {
                 String content=(String) msg.obj;
                 try {
                     tianqi=today(content);
-                    wendu.setText("当前温度： \t"+tianqi[0]);
-                    tishi.setText("温馨提示： \t"+tianqi[1]);
-                    fengxiang.setText("风向： \t"+tianqi[2]);
-                    fengli.setText("风力： \t"+tianqi[3].substring(10,12));
-                    high.setText("最"+tianqi[4]);
-                    type.setText("天气类型： \t"+tianqi[5]);
-                    low.setText("最"+tianqi[6]);
-                    date.setText("日期： \t"+tianqi[7]);
+                    mylist.add(0,"当前温度： \t"+tianqi[0]);
+                   mylist.add(1,"风向： \t"+tianqi[2]);
+                    mylist.add(2,"风力： \t"+tianqi[3].substring(10,12));
+                    mylist.add(3,"最"+tianqi[4]);
+                    mylist.add(4,"天气类型： \t"+tianqi[5]);
+                    mylist.add(5,"最"+tianqi[6]);
+                    mylist.add(6,"日期： \t"+tianqi[7]);
+                    ArrayAdapter<String> adapter1=new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item,mylist);
+                    ListView listView1=(ListView)findViewById(R.id.mylistview);
+                    listView1.setAdapter(adapter1);
+                    //wendu.setText("当前温度： \t"+tianqi[0]);
+                    //tishi.setText("温馨提示： \t"+tianqi[1]);
+                    //fengxiang.setText("风向： \t"+tianqi[2]);
+                    //fengli.setText("风力： \t"+tianqi[3].substring(10,12));
+                    //high.setText("最"+tianqi[4]);
+                    //type.setText("天气类型： \t"+tianqi[5]);
+                    //low.setText("最"+tianqi[6]);
+                    //date.setText("日期： \t"+tianqi[7]);
 
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }
@@ -82,16 +100,17 @@ public class MainActivity extends AppCompatActivity {
             {
                 String content=(String) msg.obj;
                 try {
-                    tianqi=today1(content);
-                    wendu.setText("当前温度： \t"+tianqi[0]);
-                    tishi.setText("温馨提示： \t"+tianqi[1]);
-                    fengxiang.setText("风向： \t"+tianqi[2]);
-                    fengli.setText("风力： \t"+tianqi[3].substring(10,12));
-                    high.setText("最"+tianqi[4]);
-                    type.setText("天气类型： \t"+tianqi[5]);
-                    low.setText("最"+tianqi[6]);
-                    date.setText("日期： \t"+tianqi[7]);
-
+                    tianqi=today(content);
+                    mylist.add(0,"当前温度： \t"+tianqi[0]);
+                    mylist.add(1,"风向： \t"+tianqi[2]);
+                    mylist.add(2,"风力： \t"+tianqi[3].substring(10,12));
+                    mylist.add(3,"最"+tianqi[4]);
+                    mylist.add(4,"天气类型： \t"+tianqi[5]);
+                    mylist.add(5,"最"+tianqi[6]);
+                    mylist.add(6,"日期： \t"+tianqi[7]);
+                    ArrayAdapter<String> adapter1=new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item,mylist);
+                    ListView listView1=(ListView)findViewById(R.id.mylistview);
+                    listView1.setAdapter(adapter1);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -121,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         return tianqi;
     }
     protected String[] today1(String content) throws Exception {
-        // TODO Auto-generated method stub
+
         JSONObject obj=new JSONObject(content);
         JSONObject data = obj.getJSONObject("data");
         String wendu = data.getString("wendu");
@@ -144,11 +163,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         city1=(TextView)findViewById(R.id.chengshi) ;
+        mylistview=(ListView)findViewById(R.id.listview) ;
+
+
         Intent intent = getIntent();
         final String city2 = intent.getStringExtra("city");
         city1.setText(city2);
         dbmemo=new MyDatabaseHelper(this,"love.db",null,1);
-        initViews();
         bn=(Button)findViewById(R.id.first);
         bn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,26 +227,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        Instantiation();
     }
     private String getCity() {
-        // TODO Auto-generated method stub
+
         String city=city1.getText().toString().trim();
         return city;
     }
-    private void initViews() {
-        // TODO Auto-generated method stub
 
-        wendu =(TextView) findViewById(R.id.wendu);
-        tishi =(TextView) findViewById(R.id.tishi);
-        fengxiang =(TextView) findViewById(R.id.fengxiang);
-        fengli =(TextView) findViewById(R.id.fengli);
-        high =(TextView) findViewById(R.id.high);
-        type =(TextView) findViewById(R.id.type);
-        low=(TextView) findViewById(R.id.low);
-        date =(TextView) findViewById(R.id.date);
-
-    }
 
     public void myclick(View v) throws Exception
     {;
@@ -283,6 +292,90 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public void myclick3() throws Exception
+    {;
+        Request request;
+        OkHttpClient client= new OkHttpClient();
+        Request.Builder builder=new Request.Builder();
+        builder.get();
+        builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode(getCity(), "UTF-8"));
+        request = builder.build();
+        Call call=client.newCall(request);
+
+        call.enqueue(new Callback() {
+
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String content = response.body().string();
+                Message msg=Message.obtain();
+                msg.obj=content;
+                msg.what=10;
+                handler1.sendMessage(msg);
+            }
+        });
+    }
+    public void Instantiation(){
+
+
+        /**
+         * 首页下拉刷新
+         */
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        //swipeRefreshLayout.setProgressBackgroundColor(R.color.white);
+        swipeRefreshLayout.setProgressViewEndTarget(true, 200);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mHandler.sendEmptyMessage(1);
+                    }
+                }).start();
+            }
+        });
+    }
+    //handler
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    if (swipeRefreshLayout.isRefreshing()){
+
+                        swipeRefreshLayout.setRefreshing(false);//设置不刷新
+                    }else
+                    {
+                        try {
+                            myclick3();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+//
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     class MyDatabaseHelper extends SQLiteOpenHelper {
         public static final String CREATE_LOVE = "create table love ("
                 + "city text" + ")";
