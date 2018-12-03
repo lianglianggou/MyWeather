@@ -121,6 +121,7 @@ public class Weather extends AppCompatActivity {
                 String s=date1.get(position);
                 Intent intent=new Intent(Weather.this,MainActivity.class);
                 intent.putExtra("city",s);
+                //intent.putExtra("city","上海");
                 startActivity(intent);
             }
         });
@@ -136,7 +137,7 @@ public class Weather extends AppCompatActivity {
             public void onClick(View view) {
                 String a=textView.getText().toString();
                 Intent intent=new Intent(Weather.this,MainActivity.class);
-                intent.putExtra("city","河南");
+                intent.putExtra("city",a);
                 startActivity(intent);
 
             }
@@ -146,6 +147,7 @@ public class Weather extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //String a=textView.getText().toString();
+                //String[] where={a};
                 String a="河北";
                 String[] where={"河北"};
 
