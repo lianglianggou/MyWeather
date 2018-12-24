@@ -1,59 +1,33 @@
-package com.example.myweather;
+package com.example.liangliangGOU;
 
-import android.Manifest;
-import android.app.DownloadManager;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.media.MediaPlayer;
-
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.myweather.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import okhttp3.Call;
-
-
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static android.R.id.list;
-import static android.R.id.message;
-
 
 public class MainActivity extends AppCompatActivity {
     MyDatabaseHelper dbmemo;
@@ -81,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     mylist.add(4,"天气类型： \t"+tianqi[5]);
                     mylist.add(5,"最"+tianqi[6]);
                     mylist.add(6,"日期： \t"+tianqi[7]);
-                    ArrayAdapter<String> adapter1=new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item,mylist);
+                    ArrayAdapter<String> adapter1=new ArrayAdapter<String>(MainActivity.this, R.layout.support_simple_spinner_dropdown_item,mylist);
                     ListView listView1=(ListView)findViewById(R.id.mylistview);
                     listView1.setAdapter(adapter1);
                     //wendu.setText("当前温度： \t"+tianqi[0]);
@@ -162,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     protected String[] today(String content) throws Exception {
-
         JSONObject obj=new JSONObject(content);
         JSONObject data = obj.getJSONObject("data");
         String wendu = data.getString("wendu");
@@ -206,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         final String city2 = intent.getStringExtra("city");
         city1.setText(city2);
         dbmemo=new MyDatabaseHelper(this,"love.db",null,1);
-
         bn=(Button)findViewById(R.id.first);
         bn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
                 if(cursor.moveToFirst()){
                     Toast.makeText(MainActivity.this,"已收藏",Toast.LENGTH_SHORT).show();
                     cursor.close();
-
                 }else{
 
                     ContentValues values=new ContentValues();
@@ -274,10 +245,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Instantiation();
-
     }
     private String getCity() {
-
         String city=city1.getText().toString().trim();
         return city;
     }
@@ -294,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String content = response.body().string();

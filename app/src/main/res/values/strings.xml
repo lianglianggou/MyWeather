@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">MyWeather</string>
+    <string name="app_name">傻瓜天气</string>
     <string name="title_activity_main">MainActivity</string>
 </resources>

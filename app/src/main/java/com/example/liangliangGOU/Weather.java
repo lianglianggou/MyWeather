@@ -1,52 +1,26 @@
-package com.example.myweather;
+package com.example.liangliangGOU;
 
-import android.app.DownloadManager;
-import android.app.Notification;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.media.MediaPlayer;
 
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.EOFException;
-import java.io.IOException;
-import java.net.URLEncoder;
+import com.example.myweather.R;
 import java.util.ArrayList;
-
-import okhttp3.Call;
-
-
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 
 
 public class Weather extends AppCompatActivity {
@@ -140,7 +114,6 @@ public class Weather extends AppCompatActivity {
                 menu.add(0, 0, 0, "删除");
                 menu.add(0, 1, 0, "上升");
                 menu.add(0, 2, 0, "置顶");
-
             }
         });
     }
@@ -150,7 +123,6 @@ public class Weather extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         int MID = (int) info.id;
-
         switch (item.getItemId()) {
             case 0:
                 String[] where={date1.get(MID)};
