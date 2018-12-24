@@ -51,57 +51,24 @@ import okhttp3.Response;
 
 public class Weather extends AppCompatActivity {
     private EditText city1;
-    private TextView wendu,tishi,fengxiang,fengli,high,type,low,date;
     MyDatabaseHelper dbmemo;
-    private String tianqi[];
     Button bn;
     EditText textView;
     ListView mListView;
     ArrayList<String> date1=new ArrayList<>();
     int count=0;
-
-
-
-
-
-
     private String getCity() {
-        // TODO Auto-generated method stub
         String city=city1.getText().toString().trim();
         return city;
     }
-
-
-    protected String[] today(String content) throws Exception {
-        // TODO Auto-generated method stub
-        JSONObject obj=new JSONObject(content);
-        JSONObject data = obj.getJSONObject("data");
-        String wendu = data.getString("wendu");
-        String tishi=data.getString("ganmao");
-        JSONArray forecast = data.getJSONArray("forecast");
-        JSONObject obj2=(JSONObject) forecast.get(0);
-        String fengxiang=obj2.getString("fengxiang");
-        String fengli=obj2.getString("fengli");
-        String high=obj2.getString("high");
-        String type=obj2.getString("type");
-        String low=obj2.getString("low");
-        String date=obj2.getString("date");
-        String tianqi[]={wendu,tishi,fengxiang,fengli,high,type,low,date};
-        return tianqi;
-    }
-
     @Override
-
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-
         dbmemo=new MyDatabaseHelper(this,"love.db",null,1);
         mListView=(ListView) findViewById(R.id.listview);
         SQLiteDatabase db=dbmemo.getWritableDatabase();
         Cursor cursor=db.query("love",null,null,null,null,null,null);
-
         if(cursor.moveToFirst()){
             do{
                 String author=cursor.getString(cursor.getColumnIndex("city"));
@@ -110,11 +77,9 @@ public class Weather extends AppCompatActivity {
             cursor.close();
             //oast.makeText(MainActivity.this,"success",Toast.LENGTH_SHORT).show();
         }
-
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(Weather.this,R.layout.support_simple_spinner_dropdown_item,date1);
         ListView listView=(ListView)findViewById(R.id.listview);
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -126,8 +91,6 @@ public class Weather extends AppCompatActivity {
             }
         });
         ItemOnLongClick1();
-
-
         textView=(EditText) findViewById(R.id.city) ;
         dbmemo=new MyDatabaseHelper(this,"love.db",null,1);
         dbmemo.getWritableDatabase();
@@ -146,21 +109,17 @@ public class Weather extends AppCompatActivity {
         bn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //String a=textView.getText().toString();
-                //String[] where={a};
-                String a="河北";
-                String[] where={"河北"};
-
+                String a=textView.getText().toString();
+                String[] where={a};
+                //String a="河北";
+                //String[] where={"河北"};
                 SQLiteDatabase db = dbmemo.getWritableDatabase();
                 // Cursor cursor = db.query("WordTable",null,null,null,null,null,null);
                 Cursor cursor =  db.query("love",new String[]{"city"},"city=?",where,null,null,null);
-
                 if(cursor.moveToFirst()){
                     Toast.makeText(Weather.this,"已收藏",Toast.LENGTH_SHORT).show();
                     cursor.close();
-
                 }else{
-
                     ContentValues values=new ContentValues();
                     values.put("city",a);
                     db.insert("love",null,values);
@@ -173,7 +132,6 @@ public class Weather extends AppCompatActivity {
         });
 
     }
-
     private void ItemOnLongClick1() {
         mListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
 
@@ -191,7 +149,7 @@ public class Weather extends AppCompatActivity {
         SQLiteDatabase db=dbmemo.getWritableDatabase();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
-        int MID = (int) info.id;// 这里的info.id对应的就是数据库中_id的值
+        int MID = (int) info.id;
 
         switch (item.getItemId()) {
             case 0:
@@ -202,7 +160,6 @@ public class Weather extends AppCompatActivity {
                 ListView listView=(ListView)findViewById(R.id.listview);
                 listView.setAdapter(adapter);
                 break;
-
             case 1:
                 String xx=date1.get(MID);
                 String yy=date1.get(MID-1);
@@ -250,29 +207,20 @@ public class Weather extends AppCompatActivity {
         }
 
         return super.onContextItemSelected(item);
-
     }
-
     class MyDatabaseHelper extends SQLiteOpenHelper {
         public static final String CREATE_LOVE = "create table love ("
                 + "city text" + ")";
-
         private Context mContext;
-
         public MyDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-
             super(context, name, factory, version);
-
             mContext = context;
-
         }
-
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_LOVE);
             Toast.makeText(mContext, "Create succeeded", Toast.LENGTH_SHORT).show();
         }
-
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

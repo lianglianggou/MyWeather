@@ -1,11 +1,14 @@
 package com.example.myweather;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,11 +16,14 @@ import android.media.MediaPlayer;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -35,6 +41,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import okhttp3.Call;
 
@@ -45,20 +52,18 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static android.R.id.list;
+import static android.R.id.message;
 
 
 public class MainActivity extends AppCompatActivity {
-    private TextView wendu,tishi,fengxiang,fengli,high,type,low,date;
     MyDatabaseHelper dbmemo;
     private String tianqi[];
     Button bn;
-    TextView textView;
     TextView city1;
-
     ArrayList<String > mylist=new ArrayList<String>();
     ArrayList<String > mylist1=new ArrayList<String>();
     //ArrayList<String > listviewadapter=new ArrayList<String>();
-    ListView mylistview,ListView_Id;
+    ListView mylistview;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String key="0";
     private Handler handler=new Handler(){
@@ -145,15 +150,10 @@ public class MainActivity extends AppCompatActivity {
                         mylist.add("日期： \t"+date);
 
                     }
-
-
-
-
                     ArrayAdapter<String> adapter1=new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item,mylist);
                     ListView listView1=(ListView)findViewById(R.id.mylistview);
                     listView1.setAdapter(adapter1);
                 } catch (Exception e) {
-
                     e.printStackTrace();
                 }
             }
@@ -161,10 +161,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-
     protected String[] today(String content) throws Exception {
-        // TODO Auto-generated method stub
+
         JSONObject obj=new JSONObject(content);
         JSONObject data = obj.getJSONObject("data");
         String wendu = data.getString("wendu");
@@ -180,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         String tianqi[]={wendu,tishi,fengxiang,fengli,high,type,low,date};
         return tianqi;
     }
+
     protected String[] today1(String content) throws Exception {
 
         JSONObject obj=new JSONObject(content);
@@ -198,19 +197,16 @@ public class MainActivity extends AppCompatActivity {
         return tianqi;
     }
     @Override
-
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         city1=(TextView)findViewById(R.id.chengshi) ;
         mylistview=(ListView)findViewById(R.id.listview) ;
-
-
         Intent intent = getIntent();
         final String city2 = intent.getStringExtra("city");
         city1.setText(city2);
         dbmemo=new MyDatabaseHelper(this,"love.db",null,1);
+
         bn=(Button)findViewById(R.id.first);
         bn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,11 +249,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String a=city2;
                 String[] where={city2};
-
                 SQLiteDatabase db = dbmemo.getWritableDatabase();
                 // Cursor cursor = db.query("WordTable",null,null,null,null,null,null);
                 Cursor cursor =  db.query("love",new String[]{"city"},"city=?",where,null,null,null);
-
                 if(cursor.moveToFirst()){
                     Toast.makeText(MainActivity.this,"已收藏",Toast.LENGTH_SHORT).show();
                     cursor.close();
@@ -279,16 +273,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         Instantiation();
+
     }
     private String getCity() {
 
         String city=city1.getText().toString().trim();
         return city;
     }
-
-
     public void myclick(View v) throws Exception
     {;
         Request request;
@@ -298,13 +290,9 @@ public class MainActivity extends AppCompatActivity {
         builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode(getCity(), "UTF-8"));
         request = builder.build();
         Call call=client.newCall(request);
-
         call.enqueue(new Callback() {
-
-
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override
@@ -326,15 +314,10 @@ public class MainActivity extends AppCompatActivity {
         builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode(getCity(), "UTF-8"));
         request = builder.build();
         Call call=client.newCall(request);
-
         call.enqueue(new Callback() {
-
-
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String content = response.body().string();
@@ -354,15 +337,10 @@ public class MainActivity extends AppCompatActivity {
         builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode(getCity(), "UTF-8"));
         request = builder.build();
         Call call=client.newCall(request);
-
         call.enqueue(new Callback() {
-
-
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String content = response.body().string();
@@ -382,15 +360,10 @@ public class MainActivity extends AppCompatActivity {
         builder.url("http://wthrcdn.etouch.cn/weather_mini?city="+ URLEncoder.encode(getCity(), "UTF-8"));
         request = builder.build();
         Call call=client.newCall(request);
-
         call.enqueue(new Callback() {
-
-
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String content = response.body().string();
@@ -402,17 +375,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void Instantiation(){
-
-
-        /**
-         * 首页下拉刷新
-         */
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         //swipeRefreshLayout.setProgressBackgroundColor(R.color.white);
         swipeRefreshLayout.setProgressViewEndTarget(true, 200);
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -430,7 +397,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    //handler
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -438,8 +404,7 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:
                     if (swipeRefreshLayout.isRefreshing()){
-
-                        swipeRefreshLayout.setRefreshing(false);//设置不刷新
+                        swipeRefreshLayout.setRefreshing(false);
                     }else
                     {
                         try {
@@ -448,38 +413,29 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-
-//
                     break;
                 default:
                     break;
             }
         }
     };
-
     class MyDatabaseHelper extends SQLiteOpenHelper {
         public static final String CREATE_LOVE = "create table love ("
                 + "city text" + ")";
-
         private Context mContext;
-
         public MyDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-
             super(context, name, factory, version);
-
             mContext = context;
-
         }
-
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_LOVE);
             Toast.makeText(mContext, "Create succeeded", Toast.LENGTH_SHORT).show();
         }
-
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         }
     }
+
 }
